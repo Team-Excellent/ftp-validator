@@ -25,3 +25,8 @@ def validate_filename(filename):
         return False
 
     return True
+
+
+def validate_not_empty(filename):
+    with open(filename, "r") as f:
+        return len(f.read()) != 0

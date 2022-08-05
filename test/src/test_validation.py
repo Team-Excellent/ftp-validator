@@ -1,8 +1,14 @@
 import unittest
 from src import validation
+import os
 
 
 class TestValidationMethods(unittest.TestCase):
+    @staticmethod
+    def remove_files(files):
+        for file in files:
+            os.remove(file)
+
     def test_validate_name(self):
         valid_names = [
             "MED_DATA_20210505201229.csv",
@@ -23,3 +29,15 @@ class TestValidationMethods(unittest.TestCase):
 
         for name in valid_names:
             self.assertTrue(validation.validate_filename(name))
+
+    def test_validate_not_empty(self):
+        # Invalid file
+        self.addCleanup(self.remove_files, ["temp.txt"])
+        with open("temp.txt", "w") as f:
+            self.assertFalse(validation.validate_not_empty("temp.txt"))
+
+        # Valid file
+        with open("temp.txt", "w") as f:
+            f.write("Here is some text")
+
+        self.assertTrue(validation.validate_not_empty("temp.txt"))
