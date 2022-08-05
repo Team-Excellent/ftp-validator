@@ -1,6 +1,7 @@
 import unittest
 from src import validation
 import os
+import glob
 
 
 class TestValidationMethods(unittest.TestCase):
@@ -56,3 +57,14 @@ class TestValidationMethods(unittest.TestCase):
             f.write("Here is some text")
 
         self.assertTrue(validation.validate_not_empty("temp.txt"))
+
+    def test_validate_invalid_entries(self):
+        invalid_files = glob.glob("./test/samples/invalid/Bad Data/*.csv")
+        valid_files = glob.glob("./test/samples/valid/*.csv")
+
+        for file in invalid_files:
+            print(file)
+            self.assertFalse(validation.validate_invalid_entries(file))
+
+        for file in valid_files:
+            self.assertTrue(validation.validate_invalid_entries(file))
