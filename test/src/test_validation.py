@@ -58,6 +58,36 @@ class TestValidationMethods(unittest.TestCase):
 
         self.assertTrue(validation.validate_not_empty("temp.txt"))
 
+    def test_batch_header(self):
+        valid_names = [
+            "./test/samples/valid/MED_DATA_20220803153932.csv",
+            "./test/samples/valid/MED_DATA_20220803153932.csv",
+        ]
+        invalid_names = [
+            "./test/samples/invalid/Bad Header/MED_DATA_20220803155853.csv",
+        ]
+
+        for name in invalid_names:
+            self.assertFalse(validation.check_batch_header(name))
+
+        for name in valid_names:
+            self.assertTrue(validation.check_batch_header(name))
+
+    def test_missing_columns(self):
+        valid_names = [
+            "./test/samples/valid/MED_DATA_20220803153932.csv",
+            "./test/samples/valid/MED_DATA_20220803153932.csv",
+        ]
+        invalid_names = [
+            "./test/samples/invalid/Bad Data/MED_DATA_20220803160730.csv",
+        ]
+
+        for name in invalid_names:
+            self.assertFalse(validation.check_missing_columns(name))
+
+        for name in valid_names:
+            self.assertTrue(validation.check_missing_columns(name))
+
     def test_validate_invalid_entries(self):
         invalid_files = glob.glob("./test/samples/invalid/Bad Data/*.csv")
         valid_files = glob.glob("./test/samples/valid/*.csv")
