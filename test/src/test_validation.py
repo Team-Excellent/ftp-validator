@@ -56,3 +56,18 @@ class TestValidationMethods(unittest.TestCase):
             f.write("Here is some text")
 
         self.assertTrue(validation.validate_not_empty("temp.txt"))
+
+    def test_batch_header(self):
+        valid_names = [
+            "./test/samples/valid/MED_DATA_20220803153932.csv",
+            "./test/samples/valid/MED_DATA_20220803153932.csv",
+        ]
+        invalid_names = [
+            "./test/samples/invalid/Bad Header/MED_DATA_20220803155853.csv",
+        ]
+
+        for name in invalid_names:
+            self.assertFalse(validation.check_batch_header(name))
+
+        for name in valid_names:
+            self.assertTrue(validation.check_batch_header(name))
