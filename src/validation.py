@@ -73,5 +73,8 @@ def check_missing_columns(filename):
     for i in data:
         if len(i) != 12:
             return False
+        for j in i:
+            if j == "":
+                return False
 
     return True
