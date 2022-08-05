@@ -1,4 +1,5 @@
 from datetime import datetime
+import csv
 
 
 def validate_filename(filename):
@@ -25,3 +26,22 @@ def validate_filename(filename):
         return False
 
     return True
+
+
+def check_batch_id(filename):
+    """returns whether a given file has duplicate batch ids"""
+
+    #open file and put data in list
+    with open(filename, newline='') as f:
+        reader = csv.reader(f)
+        data = list(reader)
+    
+    #for every batch id, check no common batch id's exist
+    for i in range (0, len(data)):
+        current = data[i][0]
+        for j in range (0, len(data)):
+            if current == data[j][0] and j != i:
+                return False
+    
+    return True
+
