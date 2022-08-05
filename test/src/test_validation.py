@@ -23,3 +23,18 @@ class TestValidationMethods(unittest.TestCase):
 
         for name in valid_names:
             self.assertTrue(validation.validate_filename(name))
+    
+    def test_batch_duplicate(self):
+        valid_names = [
+            "./test/samples/valid/MED_DATA_20220803153932.csv",
+            "./test/samples/valid/MED_DATA_20220803153932.csv",
+        ]
+        invalid_names = [
+            "./test/samples/invalid/Bad Data/MED_DATA_20220803160732.csv",
+        ]
+
+        for name in invalid_names:
+            self.assertFalse(validation.check_batch_id(name))
+
+        for name in valid_names:
+            self.assertTrue(validation.check_batch_id(name))

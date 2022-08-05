@@ -45,3 +45,6 @@ def check_batch_id(filename):
     
     return True
 
+def validate_not_empty(filename):
+    with open(filename, "r") as f:
+        return len(f.read()) != 0
