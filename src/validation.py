@@ -63,3 +63,15 @@ def check_batch_header(filename):
         return False
     
     return True
+
+def check_missing_columns(filename):
+    with open(filename, newline='') as f:
+        reader = csv.reader(f)
+        data = list(reader)
+
+    """Check if all lists in dataset contain the same number of items"""
+    for i in data:
+        if len(i) != 12:
+            return False
+
+    return True
