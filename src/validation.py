@@ -81,23 +81,38 @@ def validate_invalid_entries(filename):
 
             return True
 
+
 def check_batch_header(filename):
     """checks wether a given file has the correct CSV headers"""
 
-    #open file and put data in list
-    with open(filename, newline='') as f:
+    # open file and put data in list
+    with open(filename, newline="") as f:
         reader = csv.reader(f)
         data = list(reader)
 
-    #check first list which contains headers with ideal header list
-    ideal_headers = ["batch_id", "timestamp", "reading1","reading2","reading3","reading4","reading5","reading6","reading7","reading8","reading9","reading10"]
+    # check first list which contains headers with ideal header list
+    ideal_headers = [
+        "batch_id",
+        "timestamp",
+        "reading1",
+        "reading2",
+        "reading3",
+        "reading4",
+        "reading5",
+        "reading6",
+        "reading7",
+        "reading8",
+        "reading9",
+        "reading10",
+    ]
     if data[0] != ideal_headers:
         return False
 
     return True
 
+
 def check_missing_columns(filename):
-    with open(filename, newline='') as f:
+    with open(filename, newline="") as f:
         reader = csv.reader(f)
         data = list(reader)
 
