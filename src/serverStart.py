@@ -1,4 +1,4 @@
-#THIS HAS NO SHUTDOWN COMMAND RIGHT NOW! WILL ADD ONE AS SOON AS I FIGURE OUT HOW TO
+# THIS HAS NO SHUTDOWN COMMAND RIGHT NOW! WILL ADD ONE AS SOON AS I FIGURE OUT HOW TO
 
 # new file to stop relying on filezila
 
@@ -7,10 +7,11 @@ from pyftpdlib import servers
 from pyftpdlib.handlers import FTPHandler
 import time
 
+
 def startServer():
     authorizer = DummyAuthorizer()
 
-    authorizer.add_user('user', 'password', '.', perm='elradfmwMT')
+    authorizer.add_user("user", "password", ".", perm="elradfmwMT")
     # authorizer.add_anonymous(os.getcwd())
 
     # Instantiate FTP handler class
@@ -28,4 +29,4 @@ def startServer():
 
 startServer()
 time.sleep(5)
-#self.close_all()
+# self.close_all()
