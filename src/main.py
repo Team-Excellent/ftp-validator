@@ -1,5 +1,5 @@
 import os.path
-from logging import Logger
+from error_logging import Logger
 import validation
 import ftpserver
 from os import listdir
@@ -66,3 +66,4 @@ if __name__ == "__main__":
             print(f"file {file} invalid")
             invalid_dir = os.path.join(downloads_dir, "invalid")
             archive_file(file, invalid_dir)
+    shutil.rmtree("../tmp")
