@@ -4,6 +4,8 @@ import validation
 import ftpserver
 from os import listdir
 from os.path import isfile, join
+from pathlib import Path
+import shutil
 
 
 def check_all(downloaded_file):
@@ -23,14 +25,33 @@ def grab_files():
     return file_list
 
 
+def archive_file(file, out_dir):
+    filename = os.path.basename(file)
+    year = filename[9:13]
+    month = filename[13:15]
+    day = filename[15:17]
+    directory = Path(out_dir, year, month, day)
+    directory.mkdir(parents=True, exist_ok=True)
+
+    shutil.copy(file, directory.joinpath(file))
+
+    print(filename)
+
+
 # main function
 if __name__ == "__main__":
     # Start FTP server and upload samples
     ftpserver.setup()
 
     file_list = grab_files()
-    for i in file_list:
-        if check_all(i):
-            print(f"file {i} valid")
+    for file in file_list:
+        if check_all(file):
+            print(f"file {file} valid")
+            valid_dir = os.path.join(os.path.dirname(os.getcwd()), "downloads", "valid")
+            archive_file(file, valid_dir)
         else:
-            print(f"file {i} invalid")
+            print(f"file {file} invalid")
+            invalid_dir = os.path.join(
+                os.path.dirname(os.getcwd()), "downloads", "invalid"
+            )
+            archive_file(file, invalid_dir)
