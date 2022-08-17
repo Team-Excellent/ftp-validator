@@ -1,3 +1,4 @@
+import datetime
 import os.path
 from error_logging import Logger
 import validation
@@ -28,8 +29,8 @@ def check_all(downloaded_file, logger):
 
 
 # grab files from tmp
-def grab_files():
-    ftpserver.pullSamples("20220803")
+def grab_files(date):
+    ftpserver.pullSamples(date.strftime("%Y%m%d"))
     file_list = [f for f in listdir(os.getcwd())]
     return file_list
 
@@ -48,15 +49,17 @@ def archive_file(file, out_dir):
 
 
 # main function
-if __name__ == "__main__":
-    downloads_dir = Path(os.path.join(os.path.dirname(os.getcwd()), "downloads"))
+def download_files(output_dir, date):
+    downloads_dir = Path(os.path.join(output_dir, "downloads"))
     downloads_dir.mkdir(parents=True, exist_ok=True)
     log = Logger(downloads_dir.joinpath("log.txt"))
+
+    invalid_files = False
 
     # Start FTP server and upload samples
     ftpserver.setup()
 
-    file_list = grab_files()
+    file_list = grab_files(date)
     for file in file_list:
         if check_all(file, log):
             print(f"file {file} valid")
@@ -64,6 +67,13 @@ if __name__ == "__main__":
             archive_file(file, valid_dir)
         else:
             print(f"file {file} invalid")
+            invalid_files = True
             invalid_dir = os.path.join(downloads_dir, "invalid")
             archive_file(file, invalid_dir)
     shutil.rmtree("../tmp")
+
+    return invalid_files
+
+
+if __name__ == "__main__":
+    download_files(os.getcwd(), datetime.date(year=2022, month=8, day=3))
