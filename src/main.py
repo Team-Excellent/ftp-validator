@@ -6,12 +6,14 @@ from os import listdir
 from os.path import isfile, join
 
 
-# check file names for easy hits
-
-
 def check_all(downloaded_file):
-    # TODO: Add checks for all validation methods
-    return validation.validate_filename(downloaded_file)
+    passed = validation.validate_filename(downloaded_file)
+    passed = validation.check_batch_id(downloaded_file) and passed
+    passed = validation.validate_not_empty(downloaded_file) and passed
+    passed = validation.validate_invalid_entries(downloaded_file) and passed
+    passed = validation.check_batch_header(downloaded_file) and passed
+    passed = validation.check_missing_columns(downloaded_file) and passed
+    return passed
 
 
 # grab files from tmp
