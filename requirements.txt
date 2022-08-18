@@ -1,0 +1,2 @@
+pyftpdlib~=1.5.6
+tkcalendar~=1.6.1
