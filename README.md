@@ -4,6 +4,7 @@ ftp-validator: sets up an FTPServer containing a collection of csv files, pulls 
 
 
 ## usage
+```
 main.py [-h] [--ip IP] [--port PORT] [--user USER] [--pswd PSWD] [--date DATE] [--dir DIR]
 
 options:
@@ -14,3 +15,4 @@ options:
   --pswd PSWD  password for the FTP server (default: password)
   --date DATE  date to validate the files (default: 20220803)
   --dir DIR    output dir to store the validated files (default: tmp)
+  ```
