@@ -34,12 +34,12 @@ def setup():
 
 
 # adds the zip file to the ftpserver
-def pullSamples(usr, pass, ip, pt, date, dir):
+def pullSamples(usr, passwd, ip, pt, date, dir):
     # another connection! [because when this is run the initial one may have timed out, same stuff though]
     ftp = FTP()
     # should be runnning through serverStart.py, change those credentials if needed
-    ftp.connect(host=ip, port=pt)
-    ftp.login(user=usr, passwd=pass)
+    ftp.connect(host=ip, port=pt, timeout=10)
+    ftp.login(user=usr, passwd=passwd)
     # should error handle this but there are no circumstances where this is called pre setup
     ftp.cwd("/samples")
     os.chdir("..")
