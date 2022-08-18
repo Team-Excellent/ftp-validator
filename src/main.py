@@ -31,7 +31,7 @@ def check_all(downloaded_file, logger):
 # grab files from tmp
 def grab_files(date):
     ftpserver.pullSamples(date.strftime("%Y%m%d"))
-    file_list = [f for f in listdir(os.getcwd())]
+    file_list = [f for f in listdir(os.getcwd()) if date.strftime("%Y%m%d") in f]
     return file_list
 
 
@@ -49,7 +49,7 @@ def archive_file(file, out_dir):
 
 
 # main function
-def download_files(output_dir, date):
+def download_files(output_dir, start_date, end_date):
     downloads_dir = Path(os.path.join(output_dir, "downloads"))
     downloads_dir.mkdir(parents=True, exist_ok=True)
     log = Logger(downloads_dir.joinpath("log.txt"))
@@ -58,8 +58,13 @@ def download_files(output_dir, date):
 
     # Start FTP server and upload samples
     ftpserver.setup()
+    file_list = []
+    diff = end_date - start_date
 
-    file_list = grab_files(date)
+    for i in range(diff.days + 1):
+        day = start_date + datetime.timedelta(days=i)
+        file_list += grab_files(day)
+
     for file in file_list:
         if check_all(file, log):
             print(f"file {file} valid")
