@@ -34,21 +34,21 @@ def setup():
 
 
 # adds the zip file to the ftpserver
-def pullSamples(date):
+def pullSamples(usr, pass, ip, pt, date, dir):
     # another connection! [because when this is run the initial one may have timed out, same stuff though]
     ftp = FTP()
     # should be runnning through serverStart.py, change those credentials if needed
-    ftp.connect(host="127.0.0.1", port=2121)
-    ftp.login(user="user", passwd="password")
+    ftp.connect(host=ip, port=pt)
+    ftp.login(user=usr, passwd=pass)
     # should error handle this but there are no circumstances where this is called pre setup
     ftp.cwd("/samples")
     os.chdir("..")
 
     try:
-        os.chdir("./tmp")
+        os.chdir(f"./{dir}")
     except:
-        os.mkdir("./tmp")
-        os.chdir("./tmp")
+        os.mkdir(f"./{dir}")
+        os.chdir(f"./{dir}")
 
     files = ftp.nlst()
     returnLst = []
@@ -56,8 +56,6 @@ def pullSamples(date):
         if date in x:
             with open(x, "wb") as fp:
                 ftp.retrbinary(f"RETR {x}", fp.write)
-    # ftp.cwd('\\samples')
-    # ftp.quit()
 
 
 # for testing!

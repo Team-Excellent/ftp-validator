@@ -29,7 +29,7 @@ def check_all(downloaded_file, logger):
 
 
 # grab files from tmp
-def grab_files(date):
+def grab_files(usr, password, ip, port, output_dir, date):
     ftpserver.pullSamples(date.strftime("%Y%m%d"))
     file_list = [f for f in listdir(os.getcwd()) if date.strftime("%Y%m%d") in f]
     return file_list
@@ -81,4 +81,14 @@ def download_files(output_dir, start_date, end_date):
 
 
 if __name__ == "__main__":
-    download_files(os.getcwd(), datetime.date(year=2022, month=8, day=3))
+    # cli stuff happy for this to be moved around if needed
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--ip", help="user defined ip address for the FTP server (default: 127.0.0.1)", default='127.0.0.1')
+    parser.add_argument("--port", help="user defined port for the FTP server (default: 21)", default='21')
+    parser.add_argument("--user", help="username for the FTP server (default: user)", default='user')
+    parser.add_argument("--pass", help="password for the FTP server (default: password)", default='password')
+    parser.add_argument("--date", help="date to validate the files (default: 20220803)", default='20220803')
+    parser.add_argument("--dir", help="output dir to store the validated files (default: tmp)", default='tmp')
+    args = parser.parse_args()
+
+    download_files(args.user, args.pass, args.ip, args.port, args.date, args.dir, datetime.date(year=2022, month=8, day=3))
