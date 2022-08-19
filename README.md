@@ -35,4 +35,11 @@ Server Details:
 - username: user
 - password: password
 
+### Notes on FTP Server
+For proof-of-concept purposes the client program first uploads sample data to  the FTP server from the `test` folder.
+The samples on the FTP server are stored in the directory `/samples` and this is where the software will look for csv files.
+Any new csv files should be placed under this directory.
+
+In an actual implementation, the upload functionality would be removed.
+
 
