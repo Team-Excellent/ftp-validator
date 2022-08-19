@@ -1,4 +1,5 @@
-import datetime
+from datetime import datetime
+from datetime import timedelta
 import os.path
 from error_logging import Logger
 import validation
@@ -9,6 +10,8 @@ from pathlib import Path
 import shutil
 import argparse
 import ftplib
+import socket
+import gui
 
 
 def check_all(downloaded_file, logger):
@@ -48,14 +51,17 @@ def archive_file(file, out_dir):
 
     shutil.copy(file, directory.joinpath(file))
 
-    print(filename)
-
 
 # main function
 def download_files(output_dir, start_date, end_date, usr, pswd, ip, pt):
     if output_dir == "":
         raise FileNotFoundError
     downloads_dir = Path(os.path.join(output_dir, "downloads"))
+    if (len(output_dir) == 1 and output_dir != "/") or (
+        output_dir[0] != "/" and output_dir[1] != ":"
+    ):
+        downloads_dir = Path(os.getcwd()).joinpath(downloads_dir)
+
     downloads_dir.mkdir(parents=True, exist_ok=True)
     log = Logger(downloads_dir.joinpath("log.txt"))
 
@@ -67,16 +73,14 @@ def download_files(output_dir, start_date, end_date, usr, pswd, ip, pt):
     diff = end_date - start_date
 
     for i in range(diff.days + 1):
-        day = start_date + datetime.timedelta(days=i)
+        day = start_date + timedelta(days=i)
         file_list += grab_files(day, usr, pswd, ip, pt)
 
     for file in file_list:
         if check_all(file, log):
-            print(f"file {file} valid")
             valid_dir = os.path.join(downloads_dir, "valid")
             archive_file(file, valid_dir)
         else:
-            print(f"file {file} invalid")
             invalid_files = True
             invalid_dir = os.path.join(downloads_dir, "invalid")
             archive_file(file, invalid_dir)
@@ -93,6 +97,11 @@ if __name__ == "__main__":
         help="user defined ip address for the FTP server (default: 127.0.0.1)",
         default="127.0.0.1",
     )
+    parser.add_argument(
+        "--gui", dest="gui", action="store_true", help="use gui (default)"
+    )
+    parser.add_argument("--no-gui", dest="gui", action="store_false", help="no gui")
+    parser.set_defaults(gui=True)
     parser.add_argument(
         "--port",
         help="user defined port for the FTP server (default: 21)",
@@ -113,17 +122,36 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--dir",
-        help="output dir to store the validated files (default: tmp)",
-        default="tmp",
+        help="output dir to store the validated files",
+        default=".",
     )
     args = parser.parse_args()
-
-    download_files(
-        args.user,
-        args.pswd,
-        args.ip,
-        args.port,
-        args.date,
-        args.dir,
-        datetime.date(year=2022, month=8, day=3),
-    )
+    if args.gui:
+        gui.main()
+        exit(0)
+    start_date = datetime.strptime(args.date, "%Y%m%d")
+    try:
+        download_files(
+            start_date=start_date,
+            end_date=start_date,
+            usr=args.user,
+            pswd=args.pswd,
+            ip=args.ip,
+            pt=int(args.port),
+            output_dir=args.dir,
+        )
+        saved_dir = args.dir
+        if not os.path.isabs(args.dir):
+            saved_dir = Path(__file__).parent.joinpath(saved_dir).joinpath("downloads")
+        print(f"Downloaded succeeded, files saved to {saved_dir}")
+    except ConnectionRefusedError:
+        print("Connection refused, is the ip/port correct?")
+    except FileNotFoundError:
+        print("Invalid output directory")
+    except ftplib.error_perm:
+        print("Incorrect credentials")
+    except socket.timeout:
+        print("Connection timed out (are details correct?)")
+    except Exception as e:
+        print("Error Occurred")
+        print(e)

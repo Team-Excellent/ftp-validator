@@ -21,7 +21,6 @@ def setup():
     # gets every file in the sample folder
     lst = glob.glob("**/*.csv", recursive=True)
     for file in lst:
-        print(file)
         try:
             f = open(f"{file}", "rb")
             ftp.storbinary(f"STOR {os.path.basename(file)}", f)

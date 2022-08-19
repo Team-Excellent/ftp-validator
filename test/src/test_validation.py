@@ -93,7 +93,6 @@ class TestValidationMethods(unittest.TestCase):
         valid_files = glob.glob("./test/samples/valid/*.csv")
 
         for file in invalid_files:
-            print(file)
             self.assertFalse(validation.validate_invalid_entries(file))
 
         for file in valid_files:

@@ -63,7 +63,9 @@ def begin_download():
     except ftplib.error_perm:
         invalid_input_popup("Incorrect credentials")
     except socket.timeout:
-        invalid_input_popup(("Connection timed out (are details correct?)"))
+        invalid_input_popup("Connection timed out (are details correct?)")
+    except Exception:
+        print("Error occurred")
 
     if invalid_files:
         popup = Toplevel(root, pady=10, padx=10)
@@ -84,6 +86,7 @@ def begin_download():
 
 
 root = Tk(screenName="FTP Getter", baseName="FTP Getter")
+root.withdraw()
 root.title("FTP Getter")
 frame = ttk.Frame(root, padding=10)
 frame.grid()
@@ -133,5 +136,8 @@ ttk.Button(frame, text="Start", command=begin_download).grid(
 )
 
 root.resizable(width=False, height=False)
-if __name__ == "__main__":
+
+
+def main():
+    root.deiconify()
     root.mainloop()
