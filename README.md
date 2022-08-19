@@ -28,6 +28,11 @@ An example FTP server is also included and can be activated by running the `serv
 
 `python3 serverStart.py`
 
-The example server runs on localhost on port 2121. The server will contain files for the date 20220803
+The example server runs on localhost on port 2121. 
+The server will contain files for the date 20220803.
+
+Server Details:
+- username: user
+- password: password
 
 
